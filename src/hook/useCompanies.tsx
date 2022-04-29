@@ -59,7 +59,7 @@ export function CompaniesProvider({ children }: CompaniesProviderProps) {
     setTimeout(() => {
       getDataCompanies()
     }, 1000)
-  },[])
+  },[getDataCompanies, dataCompanies])
 
   const companiesFormatted = dataCompanies.map<CompanyProps>(company => ({
     ...company,
