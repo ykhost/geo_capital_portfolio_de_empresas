@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   margin-top: 2rem;
+  justify-content: center;
+  display: flex;
 
   table {
     width: 100%;
