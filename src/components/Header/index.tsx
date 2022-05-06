@@ -6,6 +6,7 @@ import Switch from 'react-switch';
 
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
+import Search from '../Search';
 
 interface Props {
   toggleTheme(): void;
@@ -23,6 +24,7 @@ export function Header({ toggleTheme }:Props) {
     <Container>
       <Content>
           <img src={logoImg} title="GeoCapital" alt="GeoCapital" onClick={handlerClick} />
+          <Search/>
           <Switch
               title={`Tema ${title}`}
               onChange={toggleTheme}
