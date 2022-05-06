@@ -23,7 +23,7 @@ export function Company() {
   const { companiesFormatted } = useCompanies()
 
   useEffect(()=> {
-    const company = companiesFormatted.find(company => company.symbol === id)
+    const company = companiesFormatted?.find(company => company.symbol === id)
     if (!company) {
       navigate('/home')
     }

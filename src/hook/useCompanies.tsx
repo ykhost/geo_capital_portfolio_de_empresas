@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react"
+import { createContext, ReactNode, useContext } from "react"
+import useSWR from "swr";
 import { api } from "../services/api";
 import { formatPrice } from "../util/format";
 
@@ -26,42 +27,34 @@ interface CompaniesProviderProps {
 }
 
 interface CompaniesContextData{
-  companiesFormatted: CompanyProps[];
+  companiesFormatted?: CompanyProps[];
+  isValidating?: boolean;
 }
 
 const CompaniesContext = createContext<CompaniesContextData>({} as CompaniesContextData )
 
 export function CompaniesProvider({ children }: CompaniesProviderProps) {
-  const [dataCompanies, setDataCompanies] = useState<Company[]>([{
-    longName: '',
-    symbol: '',
-    regularMarketPrice: 0,
-    regularMarketChangePercent: 0,
-    fullExchangeName: '',
-  }])
 
-  const getDataCompanies = useCallback(async () => {
-    const options = {
-      method: 'GET',
-      url: 'https://yh-finance.p.rapidapi.com/market/v2/get-quotes',
-      params: {region: 'US', symbols: 'AMD,IBM,AAPL,BUD,DIS,MSFT,NKE,TDOC,ITUB'},
-      headers: {
-        'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com',
-        'X-RapidAPI-Key': 'f1a15db943msh93228d470e81b4bp11114djsn480b8587b851',
-      }
-    };
-    const response = await api.request(options).then((response) => {return response.data.quoteResponse.result} )
-    setDataCompanies(response)
-  },[])
+  const options = {
+    method: 'GET',
+    url: 'https://yh-finance.p.rapidapi.com/market/v2/get-quotes',
+    params: {region: 'US', symbols: 'AMD,IBM,AAPL,BUD,DIS,MSFT,NKE,TDOC,ITUB'},
+    headers: {
+      'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com',
+      'X-RapidAPI-Key': '035bb73da1msh1f3e8f34cdccf3cp1155c8jsn3e80fa570c95',
+    }
+  };
+
+  const { data } = useSWR<Company[]>(options.url, async () => {
+    const response = await api.request(options).then((response) => {
+      return response.data.quoteResponse.result
+    } )
+    console.log(response)
+    return response
+  },{ refreshInterval: 1000 })
 
 
-  useEffect(()=>{
-    setTimeout(() => {
-      getDataCompanies()
-    }, 1000)
-  },[getDataCompanies, dataCompanies])
-
-  const companiesFormatted = dataCompanies.map<CompanyProps>(company => ({
+  const companiesFormatted = data?.map(company => ({
     ...company,
     priceFormatted: formatPrice(company.regularMarketPrice),
     percentFormatted: company.regularMarketChangePercent.toFixed(2),
