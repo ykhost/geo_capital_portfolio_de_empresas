@@ -3,6 +3,7 @@ import { BsFillInfoSquareFill } from 'react-icons/bs'
 
 import { useNavigate  } from "react-router-dom";
 import { useCompanies } from "../../hook/useCompanies";
+import { Skeleton } from "@mui/material";
 
 
 export function Companies () {
@@ -12,6 +13,63 @@ export function Companies () {
   const handlerClick = (company: string) => {
     navigate(`/company/${ company }`)
   }
+
+  if (!companiesFormatted) {
+    return (
+      <Container>
+        <table>
+          <thead>
+            <tr>
+              <th>Empresa</th>
+              <th>Ticker</th>
+              <th>Valor</th>
+              <th>Variação</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><Skeleton animation="wave" height={35} /></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td>
+               <button title="Detalhes"><BsFillInfoSquareFill/></button>
+              </td>
+            </tr>
+            <tr>
+              <td><Skeleton animation="wave" height={35} /></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td>
+               <button title="Detalhes"><BsFillInfoSquareFill/></button>
+              </td>
+            </tr>
+            <tr>
+              <td><Skeleton animation="wave" height={35} /></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td>
+               <button title="Detalhes"><BsFillInfoSquareFill/></button>
+              </td>
+            </tr>
+            <tr>
+              <td><Skeleton animation="wave" height={35} /></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td><Skeleton animation="wave" height={35}/></td>
+              <td>
+               <button title="Detalhes"><BsFillInfoSquareFill/></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Container>
+    )
+  }
+
 
   return (
     <Container>
