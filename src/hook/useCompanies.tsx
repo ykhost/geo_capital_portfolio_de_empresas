@@ -31,10 +31,6 @@ interface CompaniesContextData{
   handlerAddCompanyAtList:(data: String) => void;
 }
 
-interface listCompaniesToSearchProps {
-  ticker: String;
-}
-
 const CompaniesContext = createContext<CompaniesContextData>({} as CompaniesContextData )
 
 export function CompaniesProvider({ children }: CompaniesProviderProps) {
@@ -73,7 +69,8 @@ export function CompaniesProvider({ children }: CompaniesProviderProps) {
     } )
     console.log(response)
     return response
-  },{ refreshInterval: 10000 })
+  })
+    // },{ refreshInterval: 1000 })
 
 
   const companiesFormatted = data?.map(company => ({
