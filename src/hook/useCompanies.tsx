@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from "react"
+import { createContext, ReactNode, useContext, useState } from "react"
 import useSWR from "swr";
 import { api } from "../services/api";
 import { formatPrice } from "../util/format";
@@ -28,22 +28,44 @@ interface CompaniesProviderProps {
 
 interface CompaniesContextData{
   companiesFormatted?: CompanyProps[];
-  isValidating?: boolean;
+  handlerAddCompanyAtList:(data: String) => void;
+}
+
+interface listCompaniesToSearchProps {
+  ticker: String;
 }
 
 const CompaniesContext = createContext<CompaniesContextData>({} as CompaniesContextData )
 
 export function CompaniesProvider({ children }: CompaniesProviderProps) {
+  const [listCompaniesToSearch, setListCompaniesToSearch] = useState<String[]>(
+    ['AMD','IBM','AAPL','BUD']
+  )
+
+  const handlerAddCompanyAtList = (ticker: String) => {
+    const updateList = listCompaniesToSearch
+    updateList.push(ticker)
+    setListCompaniesToSearch(updateList)
+    console.log('Test', updateList, listCompaniesToSearch)
+  }
+
+  const URL = process.env.REACT_APP_YH_FINANCE_URL_QUOTES || ''
+  const API_KEY = process.env.REACT_APP_YH_FINANCE_API_KEY || ''
+  const API_HOST = process.env.REACT_APP_YH_FINANCE_API_HOST || ''
+
+  console.log('test', URL, API_KEY, API_HOST)
 
   const options = {
     method: 'GET',
-    url: 'https://yh-finance.p.rapidapi.com/market/v2/get-quotes',
-    params: {region: 'US', symbols: 'AMD,IBM,AAPL,BUD,DIS,MSFT,NKE,TDOC,ITUB'},
+    url: URL,
+    params: {region: 'US', symbols: listCompaniesToSearch.toString()},
     headers: {
-      'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com',
-      'X-RapidAPI-Key': '035bb73da1msh1f3e8f34cdccf3cp1155c8jsn3e80fa570c95',
+      'X-RapidAPI-Host': API_HOST,
+      'X-RapidAPI-Key': API_KEY,
     }
   };
+
+  console.log('test1', options)
 
   const { data } = useSWR<Company[]>(options.url, async () => {
     const response = await api.request(options).then((response) => {
@@ -51,7 +73,7 @@ export function CompaniesProvider({ children }: CompaniesProviderProps) {
     } )
     console.log(response)
     return response
-  },{ refreshInterval: 1000 })
+  },{ refreshInterval: 10000 })
 
 
   const companiesFormatted = data?.map(company => ({
@@ -62,7 +84,7 @@ export function CompaniesProvider({ children }: CompaniesProviderProps) {
   }))
 
   return (
-    <CompaniesContext.Provider value={{ companiesFormatted }} >
+    <CompaniesContext.Provider value={{ companiesFormatted, handlerAddCompanyAtList }} >
       { children }
     </CompaniesContext.Provider>
   );
