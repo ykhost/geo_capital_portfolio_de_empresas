@@ -1,59 +1,40 @@
-import React from 'react'
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import { useCompanies } from '../../hook/useCompanies';
+import { useTickers } from '../../hook/useTickers';
 
 type ItemProps = {
-  id: number;
-  name: string;
+  symbol: String;
+  name: String;
 }
 
-
 function App() {
-  const items: ItemProps[] = [
-    {
-      id: 0,
-      name: 'Cobol'
-    },
-    {
-      id: 1,
-      name: 'JavaScript'
-    },
-    {
-      id: 2,
-      name: 'Basic'
-    },
-    {
-      id: 3,
-      name: 'PHP'
-    },
-    {
-      id: 4,
-      name: 'Java'
-    }
-  ]
+  const { data } = useTickers();
+
+  const { handlerAddCompanyAtList } = useCompanies()
 
   const handleOnSearch = (string: string, results: any) => {
     // onSearch will have as the first callback parameter
     // the string searched and for the second the results.
-    console.log(string, results)
+    // console.log(string, results)
   }
 
   const handleOnHover = (result: any) => {
     // the item hovered
-    console.log(result)
+    // console.log(result)
   }
 
-  const handleOnSelect = (item: ItemProps) => {
-    // the item selected
-    console.log(item)
+  const handleOnSelect = ({ symbol }: ItemProps) => {
+    handlerAddCompanyAtList(symbol)
   }
 
   const handleOnFocus = () => {
-    console.log('Focused')
+    //
   }
 
   const formatResult = (item: ItemProps) => {
     return (
       <>
+        <span style={{ display: 'block', textAlign: 'left' }}>{item.symbol}</span>
         <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
       </>
     )
@@ -64,7 +45,7 @@ function App() {
       <header className="App-header">
         <div style={{ width: 400 }}>
           <ReactSearchAutocomplete
-            items={items}
+            items={data as ItemProps[]}
             onSearch={handleOnSearch}
             onHover={handleOnHover}
             onSelect={handleOnSelect}
