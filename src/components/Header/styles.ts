@@ -25,6 +25,13 @@ export const Content = styled.div`
         border-radius: 0.5rem;
       }
     }
+
+
+  }
+
+  div.content-right{
+      display: flex;
+      align-items: center;
   }
 
   img {
