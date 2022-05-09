@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { Company, Home } from "../pages";
+import { Company, Home, Profile } from "../pages";
 import { Header } from "../components/Header"
 
 
@@ -14,6 +14,7 @@ export function Render ({ toggleTheme }:Props) {
       <Routes >
         <Route path="/company/:id" element={<Company />}/>
         <Route path="/home" element={<Home />}/>
+        <Route path="/profile" element={<Profile />}/>
         <Route path="*" element={<Navigate to="/home" replace />}/>
       </Routes>
     </BrowserRouter>
